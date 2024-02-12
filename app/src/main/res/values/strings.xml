@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Пирамидка</string>
+    <string name="intro_page1">Дорогой друг!\nДобро пожаловать\nв</string>
+    <string name="intro_page2">Здесь\nты узнаешь\nпро фигуры,</string>
+    <string name="intro_page3">про\nбуквы и цифры,</string>
+    <string name="intro_page4">а также\nнаучишься\nрешать\nголоволомки!</string>
+    <string name="button_start">Начнем!</string>
+    <string name="level1_desc">Базовые\nГеометрические\nформы, счет\nи сложение</string>
+    <string name="level2_desc">Азбука\nи сложные\nматематические\nоперации</string>
+    <string name="level3_desc">Таблица\nумножения\nголоволомки\nи ребусы</string>
+    <string name="level1_title">1 Этап</string>
+    <string name="level2_title">2 Этап</string>
+    <string name="level3_title">3 Этап</string>
+</resources>
