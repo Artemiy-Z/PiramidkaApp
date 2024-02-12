@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "623256246317",
+    "project_id": "piramidkadb",
+    "storage_bucket": "piramidkadb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:623256246317:android:20c7760128036a98b1c0a4",
+        "android_client_info": {
+          "package_name": "com.example.study4child"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtBV-hZiJtQMLUTVfm2ZFeRE5_iYxog3s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
