@@ -1,4 +1,4 @@
-package com.example.study4child;
+package com.example.study4child.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,13 +13,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import android.widget.LinearLayout;
 import android.view.Gravity;
-import androidx.viewpager2.widget.ViewPager2;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Button;
-import androidx.fragment.app.FragmentActivity;
 import android.animation.ObjectAnimator;
 import android.view.View;
+import com.example.study4child.Tools.Converter;
+import com.example.study4child.Custom.CustomVP2Adapter;
+import com.example.study4child.Custom.IntroPageFragment;
+import com.example.study4child.R;
 import pl.droidsonroids.gif.GifImageView;
 
 import java.lang.Runnable;

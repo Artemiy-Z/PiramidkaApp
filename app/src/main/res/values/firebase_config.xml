@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="Typos">
+    <string name="realtime_database">https://piramidkadb-default-rtdb.firebaseio.com/</string>
+    <string name="cloud_storage">gs://piramidkadb.appspot.com</string>
+    <string name="database_list_name_1">level_1</string>
+    <string name="database_list_name_2">level_2</string>
+    <string name="database_list_name_3">level_3</string>
+</resources>

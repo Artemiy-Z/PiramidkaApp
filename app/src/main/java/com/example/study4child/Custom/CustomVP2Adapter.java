@@ -1,4 +1,4 @@
-package com.example.study4child;
+package com.example.study4child.Custom;
 
 import androidx.appcompat.app.AppCompatActivity;
 

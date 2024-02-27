@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item type="id" name="root"/>
+    <item type="id" name="load"/>
+    <item type="id" name="card_root"/>
     <item type="id" name="bottom_button"/>
+    <item type="id" name="card_button"/>
     <item type="id" name="swipe"/>
     <item type="id" name="linear"/>
     <item type="id" name="splash"/>
+    <item type="id" name="card1"/>
+    <item type="id" name="card2"/>
+    <item type="id" name="card3"/>
+    <item type="id" name="main_title"/>
+    <item type="id" name="card_image"/>
+    <item type="id" name="card_title"/>
+    <item type="id" name="pager"/>
 </resources>

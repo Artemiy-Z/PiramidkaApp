@@ -1,6 +1,4 @@
-package com.example.study4child;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.study4child.Custom;
 
 import android.os.Bundle;
 import android.content.Context;
@@ -17,8 +15,9 @@ import androidx.annotation.Nullable;
 import android.widget.RelativeLayout;
 import android.widget.ImageView;
 import android.view.Gravity;
-import android.view.ViewGroup;
 import android.widget.TextView;
+import com.example.study4child.R;
+import com.example.study4child.Tools.Converter;
 
 public class IntroPageFragment extends Fragment {
     private View view;
