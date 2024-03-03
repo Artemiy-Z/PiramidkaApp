@@ -5,6 +5,7 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.*;
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -17,9 +18,9 @@ public class GameListCard extends CardView {
     public GameListCard(@NonNull @NotNull Context ctx, GamePreviewData data) {
         super(ctx);
 
-        this.setBackground(ctx.getDrawable(R.drawable.button_bg));
+        this.setBackground(AppCompatResources.getDrawable(ctx, R.drawable.button_bg));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                Math.round(ctx.getResources().getDisplayMetrics().heightPixels * 0.7f));
+                ViewGroup.LayoutParams.MATCH_PARENT);
         int dp16 = Converter.Pixels(ctx, 16);
         params.setMargins(dp16, dp16, dp16, dp16);
         this.setLayoutParams(params);
