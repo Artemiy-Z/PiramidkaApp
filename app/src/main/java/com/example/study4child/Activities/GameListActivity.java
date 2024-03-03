@@ -12,21 +12,15 @@ import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.viewpager2.widget.ViewPager2;
-import com.example.study4child.Custom.CustomVP2Adapter;
-import com.example.study4child.Custom.GameListCard;
-import com.example.study4child.Custom.LoadScreenView;
-import com.example.study4child.Custom.ViewFragment;
+import com.example.study4child.Custom.*;
 import com.example.study4child.R;
-import com.example.study4child.Tools.Converter;
-import com.example.study4child.Tools.GameHelper;
-import com.example.study4child.Tools.GameLoadLevelPreviews;
-import com.example.study4child.Tools.GamePreviewData;
+import com.example.study4child.Tools.*;
 
 import java.util.ArrayList;
 
-public class GameListActivity extends AppCompatActivity {
+public class GameListActivity extends AppCompatActivity implements GameListSelectInterface {
 
-    CustomVP2Adapter adapter;
+    GameListVHAdapter adapter;
     LoadScreenView loadScreen;
 
     @Override
@@ -43,10 +37,10 @@ public class GameListActivity extends AppCompatActivity {
 
         ViewPager2 pager = new ViewPager2(ctx);
         pager.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
+                Math.round(ctx.getResources().getDisplayMetrics().heightPixels * 0.7f)));
         pager.setId(R.id.pager);
 
-        adapter = new CustomVP2Adapter(this);
+        adapter = new GameListVHAdapter(ctx, (GameListSelectInterface) this);
         pager.setAdapter(adapter);
 
         TextView title = new TextView(ctx);
@@ -87,6 +81,15 @@ public class GameListActivity extends AppCompatActivity {
         setContentView(root);
     }
 
+    @Override
+    public void onGameSelected(GamePreviewData data) {
+        Class activity = GameHelper.ActivityFromGameName(data.root_name);
+        Intent i = new Intent(GameListActivity.this, activity);
+        i.putExtra("path", data.gameplay_root);
+
+        startActivity(i);
+    }
+
     public void onDataObtained(ArrayList<GamePreviewData> data_list) {
         new CardCreateTask().execute(data_list);
     }
@@ -98,22 +101,7 @@ public class GameListActivity extends AppCompatActivity {
 
             for (GamePreviewData data:
                     data_list[0]) {
-                GameListCard card = new GameListCard(getApplicationContext(), data);
-                Class activity = GameHelper.ActivityFromGameName(data.root_name);
-                if(activity != null) {
-                    card.findViewById(R.id.card_button)
-                            .setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent i = new Intent(GameListActivity.this, activity);
-                                    i.putExtra("path", data.gameplay_root);
-
-                                    startActivity(i);
-                                }
-                            });
-                }
-
-                adapter.addItem(new ViewFragment(card));
+                adapter.addDataItem(data);
             }
 
             return "null";

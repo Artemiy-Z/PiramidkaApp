@@ -15,10 +15,19 @@ public class ViewFragment extends Fragment {
         view = _view;
     }
 
+    public ViewFragment() {
+        this(null);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        return view;
+    }
+
+    @Override
+    public View getView() {
         return view;
     }
 }

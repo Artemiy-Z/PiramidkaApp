@@ -10,36 +10,41 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class ImageStorageLoader {
+
+    public static Bitmap emptyImage(Context ctx) {
+        return BitmapFactory.decodeResource(ctx.getResources(), R.drawable.noimage);
+    }
+
     public static void loadFromUrl(Context ctx, String url, ImageDownloadInterface listener) {
 
-        final Bitmap[] image = {null};
+        try {
+            if(url.equals("")) {
+                throw new Exception("fucking location was empty");
+            }
 
-        // handle empty image
-        if(url == null) {
-            image[0] = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.noimage);
-            listener.onImageObtained(image[0]);
-            return;
+            StorageReference ref = FirebaseFactory.getStorage(ctx).getReferenceFromUrl(url);
+
+            final long ONE_MEGABYTE = 1024 * 1024;
+            ref.getBytes(3 * ONE_MEGABYTE)
+                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            listener.onImageObtained(bitmap);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull @NotNull Exception e) {
+                            listener.onImageObtained(emptyImage(ctx));
+                        }
+                    });
         }
-
-        StorageReference ref = FirebaseFactory.getStorage(ctx).getReferenceFromUrl(url);
-
-        final long ONE_MEGABYTE = 1024 * 1024;
-        ref.getBytes(3 * ONE_MEGABYTE)
-                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        image[0] = bitmap;
-                        listener.onImageObtained(image[0]);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull @NotNull Exception e) {
-                        image[0] = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.noimage);
-                        listener.onImageObtained(image[0]);
-                    }
-                });
+        catch (Exception e) {
+            listener.onImageObtained(emptyImage(ctx));
+        }
     }
 }
