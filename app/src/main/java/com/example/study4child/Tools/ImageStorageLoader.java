@@ -21,10 +21,6 @@ public class ImageStorageLoader {
     public static void loadFromUrl(Context ctx, String url, ImageDownloadInterface listener) {
 
         try {
-            if(url.equals("")) {
-                throw new Exception("fucking location was empty");
-            }
-
             StorageReference ref = FirebaseFactory.getStorage(ctx).getReferenceFromUrl(url);
 
             final long ONE_MEGABYTE = 1024 * 1024;
@@ -43,7 +39,7 @@ public class ImageStorageLoader {
                         }
                     });
         }
-        catch (Exception e) {
+        catch (Exception e){
             listener.onImageObtained(emptyImage(ctx));
         }
     }
