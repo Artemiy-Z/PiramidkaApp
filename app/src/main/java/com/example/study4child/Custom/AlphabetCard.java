@@ -1,8 +1,15 @@
 package com.example.study4child.Custom;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import com.example.study4child.R;
@@ -13,7 +20,7 @@ import com.google.android.material.shape.CornerFamily;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import org.jetbrains.annotations.NotNull;
 
-public class AlphabetCard extends CardView {
+public class AlphabetCard extends LinearLayout {
 
     public MediaStore.Audio audio = null;
 
@@ -23,18 +30,42 @@ public class AlphabetCard extends CardView {
         this.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        this.setBackground(ctx.getDrawable(R.drawable.button_bg));
+        this.setBackgroundColor(ctx.getColor(R.color.cyan));
+        this.setGravity(Gravity.CENTER);
+
+        RelativeLayout container = new RelativeLayout(ctx);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                Math.round(ctx.getResources().getDisplayMetrics().widthPixels * 1.3f) );
+        container.setLayoutParams(params);
+        container.setBackground(ctx.getDrawable(R.drawable.button_bg));
         int dp4 = Converter.Pixels(ctx, 4);
-        this.setPadding(dp4, dp4, dp4, dp4);
+        container.setPadding(dp4, dp4, dp4, dp4);
+        container.setGravity(Gravity.CENTER);
 
-        ShapeableImageView image = new ShapeableImageView(ctx);
-        int cornerFamily = CornerFamily.ROUNDED;
-        image.setShapeAppearanceModel(image.getShapeAppearanceModel().toBuilder()
-                .setAllCorners(cornerFamily, 16f)
-                .build());
-        image.setImageBitmap(data.image);
+        ImageView image = new ImageView(ctx);
+        image.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
         image.setId(R.id.card_image);
+        image.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
-        this.addView(image);
+        TextView title = new TextView(ctx);
+        RelativeLayout.LayoutParams title_params =
+                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+        title_params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        title_params.setMargins(0, Converter.Pixels(ctx, 16), 0, 0);
+        title.setLayoutParams(title_params);
+        title.setTextSize(22);
+        title.setTextColor(ctx.getColor(R.color.red));
+        title.setTypeface(ctx.getResources().getFont(R.font.font_family1));
+        title.setTextAlignment(TEXT_ALIGNMENT_CENTER);
+        title.setId(R.id.card_title);
+
+        container.addView(image);
+        container.addView(title);
+
+        this.addView(container);
     }
 }

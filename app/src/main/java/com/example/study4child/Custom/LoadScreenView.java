@@ -2,6 +2,7 @@ package com.example.study4child.Custom;
 
 import android.content.Context;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
 import com.example.study4child.R;
 import com.example.study4child.Tools.Converter;
@@ -23,5 +24,25 @@ public class LoadScreenView extends RelativeLayout {
         image.setLayoutParams(image_params);
         image.setImageResource(R.drawable.loading);
         this.addView(image);
+    }
+
+    @Override
+    public void setVisibility(int visibility) {
+        if(visibility == VISIBLE) {
+            super.setVisibility(visibility);
+            return;
+        }
+
+        this.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AlphaAnimation a = new AlphaAnimation(1.0f, 0.0f);
+                a.setFillAfter(true);
+                a.setDuration(500);
+
+                LoadScreenView.super.setVisibility(INVISIBLE);
+                LoadScreenView.this.startAnimation(a);
+            }
+        }, 500);
     }
 }

@@ -38,24 +38,31 @@ public class AlphabetVHAdapter extends RecyclerView.Adapter<PagerViewHolder> {
     public void addDataItem(AlphabetData item) {
         data_list.add(item);
     }
+    public void removeDataItem(int index) {
+        data_list.remove(index);
+    }
 
     @NonNull
     @NotNull
     @Override
     public PagerViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        parent.getLayoutTransition().setAnimateParentHierarchy(false);
         return new PagerViewHolder(new AlphabetCard(ctx, emptyData));
     }
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull PagerViewHolder holder, int position) {
         AlphabetData item = data_list.get(position);
-
         ShapeableImageView image = holder.itemView.findViewById(R.id.card_image);
 
         image.setImageBitmap(item.image);
         image.setOnClickListener(listener::onCardClicked);
+
+        TextView title = holder.itemView.findViewById(R.id.card_title);
+        String text = "Буква "+item.letter+" - "+item.title;
+        title.setText(text);
     }
+
+
 
     @Override
     public int getItemCount() {
