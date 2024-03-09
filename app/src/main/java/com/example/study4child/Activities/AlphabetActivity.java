@@ -81,15 +81,9 @@ public class AlphabetActivity extends AppCompatActivity {
         exit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-                builder.setMessage(R.string.thanks_for_playing);
-                builder.setNeutralButton("Ага!", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.show();
+                Toast.makeText(ctx,
+                        ctx.getResources().getString(R.string.thanks_for_playing),
+                        Toast.LENGTH_LONG).show();
                 finish();
             }
         });

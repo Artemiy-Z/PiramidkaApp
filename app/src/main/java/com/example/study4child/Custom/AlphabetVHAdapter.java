@@ -13,7 +13,6 @@ import com.example.study4child.Tools.AlphabetData;
 import com.example.study4child.Tools.GameListSelectInterface;
 import com.example.study4child.Tools.GamePreviewData;
 import com.example.study4child.Tools.ImageStorageLoader;
-import com.google.android.material.imageview.ShapeableImageView;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ public class AlphabetVHAdapter extends RecyclerView.Adapter<PagerViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull @NotNull PagerViewHolder holder, int position) {
         AlphabetData item = data_list.get(position);
-        ShapeableImageView image = holder.itemView.findViewById(R.id.card_image);
+        ImageView image = holder.itemView.findViewById(R.id.card_image);
 
         image.setImageBitmap(item.image);
         image.setOnClickListener(listener::onCardClicked);
