@@ -6,14 +6,14 @@
     <string name="intro_page4">а также\nнаучишься\nрешать\nголоволомки!</string>
     <string name="button_start">Начнем!</string>
     <string name="button_play">Играть!</string>
-    <string name="level1_desc">Базовые\nГеометрические\nформы, счет\nи пазлы</string>
-    <string name="level2_desc">Азбука,\nсложение,\nвычитание</string>
-    <string name="level3_desc">Таблица\nумножения,\nголоволомки\nи ребусы</string>
+    <string name="level1_desc">Базовые\nГеометрические\nформы</string>
+    <string name="level2_desc">Счет от 1 до 9</string>
+    <string name="level3_desc">Азбука и слова</string>
     <string name="level1_title">1 Этап</string>
     <string name="level2_title">2 Этап</string>
     <string name="level3_title">3 Этап</string>
-    <string name="test_descr">Здесь буду подгружаться доступные игры с сервера</string>
+    <string name="test_descr">Здесь будут подгружаться доступные игры с сервера</string>
     <string name="game_list_descr">Выбери интересную тебе игру и нажми "Играть"</string>
     <string name="error">О-ой, что-то пошло не так!</string>
-    <string name="thanks_for_playing">Спасибо за игру! Не забудь заценить другие игры тоже!</string>
+    <string name="thanks_for_playing">Спасибо за игру!</string>
 </resources>

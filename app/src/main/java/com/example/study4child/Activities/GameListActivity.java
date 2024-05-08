@@ -18,7 +18,7 @@ import com.example.study4child.Tools.*;
 
 import java.util.ArrayList;
 
-public class GameListActivity extends AppCompatActivity implements GameListSelectInterface {
+public class GameListActivity extends MyActivity implements GameListSelectInterface {
 
     GameListVHAdapter adapter;
     LoadScreenView loadScreen;
@@ -84,6 +84,11 @@ public class GameListActivity extends AppCompatActivity implements GameListSelec
     @Override
     public void onGameSelected(GamePreviewData data) {
         Class activity = GameHelper.ActivityFromGameName(data.root_name);
+        if(activity == null)
+            return;
+
+        MyApplication.getPoolInstance().play("open");
+
         Intent i = new Intent(GameListActivity.this, activity);
         i.putExtra("path", data.gameplay_root);
 

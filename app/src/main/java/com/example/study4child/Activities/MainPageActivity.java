@@ -11,8 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import com.example.study4child.Custom.MainPageCardCreator;
 import com.example.study4child.R;
+import com.example.study4child.Tools.MyActivity;
+import com.example.study4child.Tools.MyApplication;
 
-public class MainPageActivity extends AppCompatActivity {
+public class MainPageActivity extends MyActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +56,14 @@ public class MainPageActivity extends AppCompatActivity {
         setContentView(root);
     }
 
-    private int card_id_1 = R.id.card1;
-
     private void CardClick(View view) {
         View button = view.findViewById(R.id.card_button);
         if(button == null)
             return;
 
         Intent i = new Intent(MainPageActivity.this, GameListActivity.class);
+
+        MyApplication.getPoolInstance().play("open");
 
         if(view.getId() == R.id.card1)
             i.putExtra("level", 1);

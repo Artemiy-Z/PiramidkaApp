@@ -1,5 +1,6 @@
 package com.example.study4child.Activities;
 
+import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -22,19 +23,34 @@ import com.example.study4child.Tools.Converter;
 import com.example.study4child.Custom.CustomVP2Adapter;
 import com.example.study4child.Custom.IntroPageFragment;
 import com.example.study4child.R;
+import com.example.study4child.Tools.MyActivity;
+import com.example.study4child.Tools.MyApplication;
+import com.example.study4child.Tools.SFXPool;
 import pl.droidsonroids.gif.GifImageView;
 
 import java.lang.Runnable;
 
 
-public class SplashIntroActivity extends AppCompatActivity {
+public class SplashIntroActivity extends MyActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		
 		Context ctx = getApplicationContext();
-		
+
+		// Initializing SFX and putting it into application, so all the activities can access it
+		SFXPool pool = new SFXPool(ctx);
+		MyApplication.setPoolInstance(pool);
+
+		// start the music
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				  MyApplication.getPoolInstance().backgroundMusic("music");
+			}
+		}, 2500);
+
 		//root view
 		ConstraintLayout root = new ConstraintLayout(ctx);
 		root.setId(R.id.root);
@@ -143,6 +159,7 @@ public class SplashIntroActivity extends AppCompatActivity {
 
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
+				MyApplication.getPoolInstance().play("bubble");
 				startActivity(new Intent(SplashIntroActivity.this, MainPageActivity.class));
 				finish();
 			}
@@ -154,6 +171,8 @@ public class SplashIntroActivity extends AppCompatActivity {
 		// adding onclick to splash screen to animate intro on the screen
 		splash_container.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
+				MyApplication.getPoolInstance().play("swipe");
+
 				ObjectAnimator anim = ObjectAnimator.ofFloat(linear_container, "translationY", -wave.getHeight());
 				anim.setDuration(900);
 				anim.start();

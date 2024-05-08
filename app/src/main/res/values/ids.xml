@@ -15,4 +15,6 @@
     <item type="id" name="card_image"/>
     <item type="id" name="card_title"/>
     <item type="id" name="pager"/>
+    <item type="id" name="container"/>
+    <item type="id" name="count_text"/>
 </resources>

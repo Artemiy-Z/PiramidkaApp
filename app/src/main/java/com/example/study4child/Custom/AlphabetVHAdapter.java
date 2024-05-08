@@ -9,10 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.study4child.Activities.AlphabetActivity;
 import com.example.study4child.R;
-import com.example.study4child.Tools.AlphabetData;
-import com.example.study4child.Tools.GameListSelectInterface;
-import com.example.study4child.Tools.GamePreviewData;
-import com.example.study4child.Tools.ImageStorageLoader;
+import com.example.study4child.Tools.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -57,8 +54,9 @@ public class AlphabetVHAdapter extends RecyclerView.Adapter<PagerViewHolder> {
         image.setOnClickListener(listener::onCardClicked);
 
         TextView title = holder.itemView.findViewById(R.id.card_title);
-        String text = "Буква "+item.letter+" - "+item.title;
+        String text = "Буква "+ item.letter+" - "+item.title;
         title.setText(text);
+        title.setTag(item.letter+";"+item.title);
     }
 
 

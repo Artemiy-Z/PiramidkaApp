@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class AlphabetCard extends RelativeLayout {
 
-    public MediaStore.Audio audio = null;
 
     public AlphabetCard(@NonNull @NotNull Context ctx, AlphabetData data) {
         super(ctx);

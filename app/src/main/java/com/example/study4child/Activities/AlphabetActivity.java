@@ -5,29 +5,29 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.viewpager2.widget.ViewPager2;
 import com.example.study4child.Custom.*;
 import com.example.study4child.R;
-import com.example.study4child.Tools.AlphabetData;
-import com.example.study4child.Tools.AlphabetLoader;
+import com.example.study4child.Tools.*;
 import com.google.firebase.database.DatabaseReference;
+import net.gotev.speech.Speech;
+import net.gotev.speech.TextToSpeechCallback;
 import org.jetbrains.annotations.NotNull;
 import pl.droidsonroids.gif.GifImageView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class AlphabetActivity extends AppCompatActivity {
+ public class AlphabetActivity extends MyActivity {
 
     private ArrayList<AlphabetData> cards = new ArrayList<>(); // list of downloaded cards// private
     private int currentIndex = -1;
@@ -38,6 +38,8 @@ public class AlphabetActivity extends AppCompatActivity {
     private LoadScreenView loading;
     private GifImageView congratsView;
     private Button exit_button;
+    private GifImageView clickIcon;
+    private boolean speechInitialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,24 +57,29 @@ public class AlphabetActivity extends AppCompatActivity {
         pager.setAdapter(adapter);
 
         pager.setOffscreenPageLimit(4);
-        pager.setEnabled(false);
+        pager.setUserInputEnabled(false);
 
         root.addView(pager);
 
         loading = new LoadScreenView(ctx);
         loading.setVisibility(View.VISIBLE);
 
-        congratsView = new GifImageView(ctx);
-        congratsView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        congratsView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        congratsView.setImageResource(R.drawable.sparkles);
+        congratsView = new CongratulationGifImage(ctx);
         congratsView.setVisibility(View.INVISIBLE);
 
         root.addView(congratsView);
         root.addView(loading);
 
         exit_button = new Button(ctx);
+
+        RelativeLayout.LayoutParams exit_params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        exit_params.addRule(RelativeLayout.ALIGN_PARENT_START);
+        exit_params.addRule(RelativeLayout.ALIGN_PARENT_END);
+        exit_params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        exit_params.setMargins(0, 0, 0, Converter.Pixels(ctx, 64));
+        exit_button.setLayoutParams(exit_params);
+
         exit_button.setText("Выход");
         exit_button.setTextSize(24);
         exit_button.setTextColor(ctx.getColor(R.color.red));
@@ -81,15 +88,29 @@ public class AlphabetActivity extends AppCompatActivity {
         exit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ctx,
-                        ctx.getResources().getString(R.string.thanks_for_playing),
-                        Toast.LENGTH_LONG).show();
-                finish();
+                MyApplication.getPoolInstance().play("bubble");
+                Speech.getInstance().say(ctx.getResources().getString(R.string.thanks_for_playing));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, 1500);
             }
         });
         exit_button.setVisibility(View.GONE);
 
         root.addView(exit_button);
+
+        clickIcon = new GifImageView(ctx);
+        RelativeLayout.LayoutParams click_params = new RelativeLayout.LayoutParams(Converter.Pixels(ctx, 128),
+                                                                                   Converter.Pixels(ctx, 128));
+        click_params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        clickIcon.setLayoutParams(click_params);
+        clickIcon.setImageResource(R.drawable.click);
+        clickIcon.setVisibility(View.INVISIBLE);
+
+        root.addView(clickIcon);
 
         // get path from intent
         String path = getIntent().getStringExtra("path");
@@ -97,6 +118,28 @@ public class AlphabetActivity extends AppCompatActivity {
         new AlphabetLoader().Load(ctx, AlphabetActivity.this, path); // (1)
 
         setContentView(root);
+
+        Speech.init(ctx, getPackageName(),
+                new TextToSpeech.OnInitListener() {
+                    @Override
+                    public void onInit(int status) {
+                        switch (status) {
+                            case TextToSpeech.SUCCESS:
+                                Speech.getInstance().setLocale(new Locale("RU"));
+                                speechInitialized = true;
+                                break;
+                            default:
+                                Toast.makeText(ctx, "Произошла ошибка во время инициализации", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    protected void onDestroy() {
+        // prevent memory leaks when activity is destroyed
+        super.onDestroy();
+        Speech.getInstance().shutdown();
     }
 
     public void onDataObtained(ArrayList<DatabaseReference> data) { // (2)
@@ -123,16 +166,7 @@ public class AlphabetActivity extends AppCompatActivity {
 
     public void onCardLoaded(AlphabetData data) { // (4)
         if(data == null) {
-            new AlertDialog.Builder(getApplicationContext())
-                    .setMessage(getApplicationContext().getString(R.string.error))
-                    .setNeutralButton("Окей", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    })
-                    .show();
-            finish();
+            ErrorDialog(AlphabetActivity.this).show();
         }
 
         addCard(data);
@@ -148,40 +182,56 @@ public class AlphabetActivity extends AppCompatActivity {
         }
         else if(currentIndex==1) {
             loading.setVisibility(View.INVISIBLE);
+            clickIcon.setVisibility(View.VISIBLE);
         }
     }
 
     public void onCardClicked(View v) {
 
+        if(!speechInitialized) {
+            return;
+        }
+
         v.setOnClickListener(null);
+        clickIcon.setVisibility(View.INVISIBLE);
 
-        AlphaAnimation fadeIn = new AlphaAnimation(0f, 1f);
-        fadeIn.setFillAfter(true);
-        fadeIn.setDuration(500);
-        congratsView.setVisibility(View.VISIBLE);
-        congratsView.startAnimation(fadeIn);
+        View title = ((View) v.getParent()).findViewById(R.id.card_title);
+        String[] tags = ((String)title.getTag()).split(";");
+        String sasText = "Буква " + Letter2Word.convert(tags[0]) + ". " + tags[1];
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                AlphaAnimation fadeOut = new AlphaAnimation(1f, 0f);
-                fadeOut.setFillAfter(true);
-                fadeOut.setDuration(500);
-                congratsView.setVisibility(View.INVISIBLE);
-                congratsView.startAnimation(fadeOut);
-            }
-        }, 1500);
+        Speech.getInstance().say(sasText,
+                new TextToSpeechCallback() {
+                    @Override
+                    public void onStart() {
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                v.setOnClickListener(AlphabetActivity.this::onCardExited);
-            }
-        }, 2500);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        v.setOnClickListener(AlphabetActivity.this::onCardExited);
+                        clickIcon.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
     }
 
     public void onCardExited(View v) {
         if(pager.getCurrentItem() < loadedIndex) {
+            congratsView.setVisibility(View.VISIBLE);
+
+            MyApplication.getPoolInstance().play("swipe");
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    congratsView.setVisibility(View.INVISIBLE);
+                }
+            }, 1500);
+
             pager.setCurrentItem(adapter.getItemCount(), true);
             LoadNextCard();
         }
@@ -189,5 +239,17 @@ public class AlphabetActivity extends AppCompatActivity {
 
     private void onCardsEnded() {
         exit_button.setVisibility(View.VISIBLE);
+    }
+
+    public static AlertDialog.Builder ErrorDialog(AppCompatActivity act) {
+        return new AlertDialog.Builder(act)
+                .setMessage(act.getString(R.string.error))
+                .setNeutralButton("Окей", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        act.finish();
+                    }
+                });
     }
 }
