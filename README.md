@@ -1,16 +1,16 @@
-# info
+# Info
 
 This project was created as part of practice and educational process. The theme of this project was an android app about educational games for children.
 
 The main goals - study programming patterns and client-server achitechtures while using Java programming language. 
 
-# result
+# Result
 
 As a result, app working on android devices was developed, containing three various games. 
 
 This project was aiming to make a well organized and readable code, and this task is pretty much fulfilled in the end.
 
-# credits
+# Credits
 
 Server part was powered by Firebase   - https://firebase.google.com/
 
